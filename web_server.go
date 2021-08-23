@@ -22,12 +22,6 @@ type WebServer struct{}
 // listen() sets up all of the route handlers and launches the
 // redcard web server.
 func (ws WebServer) listen() {
-	// Check that the database is up.
-	// This can likely be removed...
-	if !(db.isRunning()) {
-		log.Fatal("The database is not running!")
-	}
-
 	// Set up the file server to serve the static web pages
 	fileServer := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fileServer)

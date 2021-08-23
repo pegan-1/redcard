@@ -15,6 +15,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 )
 
@@ -28,19 +29,29 @@ func (DB) start() {
 	db.cache = map[string]string{}
 
 	// Read in database file.
+	dbFile, fileOpenErr := os.Open("rc.db")
+	if fileOpenErr != nil {
+		log.Fatal(fileOpenErr)
+	}
+	defer dbFile.Close()
 
 	// Update cache with database file.
+	jsonDB, readFileError := ioutil.ReadAll(dbFile)
+	if readFileError != nil {
+		log.Fatal(readFileError)
+	}
+	cacheError := json.Unmarshal([]byte(jsonDB), &db.cache)
+	if cacheError != nil {
+		log.Fatal(cacheError)
+	}
 
-	// One time only - write to database file to bootstrap...
-	db.write("admin", "admin")
-
+	// No errors in loading the database. Report that the db is running.
 	fmt.Println("Database running")
-
 }
 
 // Given a key, read the associated value from the database.
-func (DB) read(key string) {
-
+func (DB) read(key string) string {
+	return db.cache[key]
 }
 
 // Given a key, value -> store the information to the database.
@@ -61,15 +72,4 @@ func (DB) write(key string, value string) {
 		fmt.Printf("err: %v\n", errFile)
 		return // Todo - better error handling.
 	}
-}
-
-// Stop the database
-func (DB) stop() {
-
-}
-
-// true -> database is running, false -> otherwise
-func (DB) isRunning() bool {
-	// TBD... Actually create a check that verifies that the db is up.
-	return true
 }
