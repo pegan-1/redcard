@@ -4,7 +4,7 @@ Web Server for the redcard web platform.
 
 @author  Peter Egan
 @since   2021-08-15
-@lastUpdated 2021-08-22
+@lastUpdated 2021-08-26
 
 Copyright (c) 2021 kiercam llc
 */
@@ -27,9 +27,10 @@ func (ws WebServer) listen() {
 	http.Handle("/", fileServer)
 
 	// Set up the route handlers
-	http.HandleFunc("/admin", adminHandler) // Handles the admin panel...
-	http.HandleFunc("/blog", blogHandler)   // Handles the blog...
-	http.HandleFunc("/login", loginHandler) // Handles the login...
+	http.HandleFunc("/admin", adminHandler)       // Handles the admin panel...
+	http.HandleFunc("/admin.html", admin2Handler) // Don't allow to be accessed directly.
+	http.HandleFunc("/blog", blogHandler)         // Handles the blog...
+	http.HandleFunc("/login", loginHandler)       // Handles the login...
 
 	// Start up the Web Server
 	// fmt.Println("Starting Web Server on port 8080")
@@ -50,7 +51,7 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 	// Process 'Get' and 'Post' calls
 	switch r.Method {
 	case "GET":
-		http.ServeFile(w, r, "static/admin.html")
+		http.Error(w, "404 not found.", http.StatusNotFound)
 	case "POST":
 		// Call ParseForm() to parse the raw query and update r.PostForm and r.Form.
 		if err := r.ParseForm(); err != nil {
@@ -71,7 +72,19 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Title = %s\n", title)
 		fmt.Fprintf(w, "Post = %s\n", post)
 	default:
-		fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
+		fmt.Fprintf(w, "Sorry, only POST method is supported.")
+	}
+}
+
+// Only allow admin.html if it is from the login screen (a redirect)
+func admin2Handler(w http.ResponseWriter, r *http.Request) {
+	// Build the valid referrer string.
+	referrerStr := "http://" + r.Host + "/login"
+	if r.Referer() == referrerStr {
+		// login was successful.  Show the User the admin screen.
+		http.ServeFile(w, r, "static/admin.html")
+	} else { // User has not logged in. Don't allow access.
+		http.Error(w, "404 not found.", http.StatusNotFound)
 	}
 }
 
@@ -94,9 +107,6 @@ func blogHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handles the User Login
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-
-	fmt.Println("The Login Handler has been called!")
-
 	if r.URL.Path != "/login" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
@@ -107,7 +117,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		http.ServeFile(w, r, "static/login.html")
 	case "POST":
-		// Call ParseForm() to parse the raw query and update r.PostForm and r.Form.
+		// The User is attempting to login.
 		if err := r.ParseForm(); err != nil {
 			fmt.Fprintf(w, "ParseLoginPost() err: %v", err)
 			return
@@ -117,15 +127,18 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
-		// Verify the login credentials (TBD)
-		// Just print for now to see that the server is receiving the information.
-		fmt.Println("The username is " + username)
-		fmt.Println("The password is " + password)
-
-		// Reply back to the web
-		fmt.Fprintf(w, "Attempted User Login! r.PostFrom = %v\n", r.PostForm)
-		fmt.Fprintf(w, "Username = %s\n", username)
-		fmt.Fprintf(w, "Password = %s\n", password)
+		// Verify the login credentials (very rudimentary for now)
+		dbPassword := db.read(username)
+		if password == dbPassword { // Credentials match
+			// Redirect the User to the admin screen.
+			http.Redirect(w, r, "admin.html", http.StatusSeeOther)
+		} else { // Credentials do no match.
+			// Inform the User that the passwords don't match.
+			fmt.Fprintf(w, "Failed Login Attempt. Login credentials are incorrect.")
+			// fmt.Fprintf(w, "Attempted User Login! r.PostFrom = %v\n", r.PostForm)
+			// fmt.Fprintf(w, "Username = %s\n", username)
+			// fmt.Fprintf(w, "Password = %s\n", password)
+		}
 	default:
 		fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
 	}

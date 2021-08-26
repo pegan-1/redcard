@@ -45,6 +45,7 @@ func (b blog_post) post() {
 	<h5>%s</h5>
  	<!-- <div class="fakeimg" style="height:200px;">Image</div> -->
 	<p>%s</p>
+	<hr class="solid">
 	</div>`
 	newPost := fmt.Sprintf(newPostString, b.title, currentTime.Format("2006-January-02"), b.content)
 
