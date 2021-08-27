@@ -4,3 +4,6 @@ main
 # static folder
 static
 
+# database
+rc.db
+
