@@ -67,6 +67,11 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 		bp := blog_post{title: title, content: post}
 		bp.post()
 
+		// TBD: Have the blog post return an error (possibly)
+
+		// After posting the blog, redirect the User to the blog.
+		http.Redirect(w, r, "blog.html", http.StatusSeeOther)
+
 		// Reply back to the web
 		fmt.Fprintf(w, "Post from website! r.PostFrom = %v\n", r.PostForm)
 		fmt.Fprintf(w, "Title = %s\n", title)
