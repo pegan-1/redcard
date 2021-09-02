@@ -12,6 +12,8 @@ Copyright (c) 2021 kiercam llc
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -47,7 +49,6 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}
-
 	// Process 'Get' and 'Post' calls
 	switch r.Method {
 	case "GET":
@@ -76,6 +77,37 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Post from website! r.PostFrom = %v\n", r.PostForm)
 		fmt.Fprintf(w, "Title = %s\n", title)
 		fmt.Fprintf(w, "Post = %s\n", post)
+	case "PUT": // Here temporarily to handle the Quill
+		// Ensure the correct content type has been sent to the server.
+		contentType := r.Header.Get("Content-Type")
+		if contentType != "application/json" {
+			// Put an error code here. Do nothing but notify the screen.
+			fmt.Println("Incorrect Content Type")
+		}
+		var bp blog_post2 // Declare the blog post.
+		var unmarshalErr *json.UnmarshalTypeError
+		decoder := json.NewDecoder(r.Body)
+		decoder.DisallowUnknownFields()
+		err := decoder.Decode(&bp)
+		log.Println("decoding the body!")
+		log.Println(bp)
+		if err != nil {
+			fmt.Println("There was a decoding error!")
+			if errors.As(err, &unmarshalErr) {
+				errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+			} else {
+				errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+			}
+			return
+		}
+
+		// Add the post to the blog.
+		bp.postQuill()
+
+		// Return a success back to the client.
+		// Modify this later.
+		errorResponse(w, "Success", http.StatusOK)
+		return
 	default:
 		fmt.Fprintf(w, "Sorry, only POST method is supported.")
 	}
@@ -147,4 +179,15 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	default:
 		fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
 	}
+}
+
+// An error has been encountered in processing HTTP requests. Send a response back
+// to the client.
+func errorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(httpStatusCode)
+	resp := make(map[string]string)
+	resp["message"] = message
+	jsonResp, _ := json.Marshal(resp)
+	w.Write(jsonResp)
 }
