@@ -2,7 +2,7 @@
 redcard
 
 # static folder
-static
+# static
 
 # database
 rc.db

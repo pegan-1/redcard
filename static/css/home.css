@@ -1,0 +1,51 @@
+/*
+home.css
+Style sheet for the index page for the redcard server.
+
+@author  Peter Egan
+@lastUpdated 2021-09-06
+
+Copyright (c) 2021 kiercam llc
+*/
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #aa0412;
+  color: white;
+}
+
+.welcome{
+  margin-left: 30px;
+}
+
+.elevator-pitch{
+  margin-left: 30px;
+}
+
+.footer_logo {
+  color: #aa0412;
+  text-align: center;
+}
