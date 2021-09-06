@@ -4,7 +4,7 @@ Web Server for the redcard web platform.
 
 @author  Peter Egan
 @since   2021-08-15
-@lastUpdated 2021-08-26
+@lastUpdated 2021-09-05
 
 Copyright (c) 2021 kiercam llc
 */
@@ -12,6 +12,8 @@ Copyright (c) 2021 kiercam llc
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -47,35 +49,42 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}
-
 	// Process 'Get' and 'Post' calls
 	switch r.Method {
 	case "GET":
 		http.Error(w, "404 not found.", http.StatusNotFound)
-	case "POST":
-		// Call ParseForm() to parse the raw query and update r.PostForm and r.Form.
-		if err := r.ParseForm(); err != nil {
-			fmt.Fprintf(w, "ParseAdminPost() err: %v", err)
+	case "POST": // Here temporarily to handle the Quill
+		// Ensure the correct content type has been sent to the server.
+		contentType := r.Header.Get("Content-Type")
+		if contentType != "application/json" {
+			// Put an error code here. Do nothing but notify the screen.
+			fmt.Println("Incorrect Content Type")
+		}
+		var bp blog_post // Declare the blog post.
+		var unmarshalErr *json.UnmarshalTypeError
+		decoder := json.NewDecoder(r.Body)
+		decoder.DisallowUnknownFields()
+		err := decoder.Decode(&bp)
+		if err != nil {
+			fmt.Println("There was a decoding error!")
+			if errors.As(err, &unmarshalErr) {
+				errorResponse(w, "Bad Request. Wrong Type provided for field "+unmarshalErr.Field, http.StatusBadRequest)
+			} else {
+				errorResponse(w, "Bad Request "+err.Error(), http.StatusBadRequest)
+			}
 			return
 		}
 
-		// Grab the blog information from the POST
-		title := r.FormValue("blog_title")
-		post := r.FormValue("blog_body")
-
-		// Add the blog post to the blog.
-		bp := blog_post{title: title, content: post}
+		// Add the post to the blog.
 		bp.post()
 
-		// TBD: Have the blog post return an error (possibly)
-
 		// After posting the blog, redirect the User to the blog.
-		http.Redirect(w, r, "blog.html", http.StatusSeeOther)
-
-		// Reply back to the web
-		fmt.Fprintf(w, "Post from website! r.PostFrom = %v\n", r.PostForm)
-		fmt.Fprintf(w, "Title = %s\n", title)
-		fmt.Fprintf(w, "Post = %s\n", post)
+		// Note: This currently is not working - Issue #15.
+		// http.Redirect(w, r, "index.html", http.StatusSeeOther)
+		http.Redirect(w, r, "/blog", http.StatusFound)
+		// fmt.Fprintf(w, "Added a new blog post!")
+		// fmt.Fprintf(w, "Blog Title = %s\n", bp.Title)
+		// fmt.Fprintf(w, "Blog Content = %s\n", bp.Content)
 	default:
 		fmt.Fprintf(w, "Sorry, only POST method is supported.")
 	}
@@ -147,4 +156,15 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	default:
 		fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
 	}
+}
+
+// An error has been encountered in processing HTTP requests. Send a response back
+// to the client.
+func errorResponse(w http.ResponseWriter, message string, httpStatusCode int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(httpStatusCode)
+	resp := make(map[string]string)
+	resp["message"] = message
+	jsonResp, _ := json.Marshal(resp)
+	w.Write(jsonResp)
 }

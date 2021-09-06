@@ -4,7 +4,7 @@ Manages the blog for the redcard instance.
 
 @author  Peter Egan
 @since   2021-08-17
-@lastUpdated 2021-08-22
+@lastUpdated 2021-09-05
 
 Copyright (c) 2021 kiercam llc
 */
@@ -19,10 +19,11 @@ import (
 )
 
 type blog_post struct {
-	title   string
-	content string
+	Title   string `json:"title"`
+	Content string `json:"content"`
 }
 
+// New b
 func (b blog_post) post() {
 	// Given a valid blog post, write the post to the blog file.
 	// 1) Read in the blog file...
@@ -40,14 +41,13 @@ func (b blog_post) post() {
 	blogString := string(blog)
 
 	// c) Create the new HMTL for the blog post
-	newPostString := `<div class="post" id="placeholder">
+	newPostString := `<div class="post">
 	<h2>%s</h2>
 	<h5>%s</h5>
- 	<!-- <div class="fakeimg" style="height:200px;">Image</div> -->
-	<p>%s</p>
+	%s
 	<hr class="solid">
 	</div>`
-	newPost := fmt.Sprintf(newPostString, b.title, currentTime.Format("2006-January-02"), b.content)
+	newPost := fmt.Sprintf(newPostString, b.Title, currentTime.Format("2006-January-02"), b.Content)
 
 	// d) Split the blog byte slice.
 	s := strings.SplitAfter(blogString, "<div class=\"row\">")
