@@ -1,0 +1,39 @@
+<!-- 
+login.html
+Mark-up for the redcard login page.
+
+@author  Peter Egan
+@lastUpdated 2021-09-06
+
+Copyright (c) 2021 kiercam llc
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Login to redcard</title>
+  <link rel="stylesheet" type="text/css" href="css/login.css"> 
+</head>
+
+<body>
+  <div>
+    <!--
+    <div id="login-error-msg-holder">
+      <p id="login-error-msg">Invalid username <span id="error-msg-second-line">and/or password</span></p>
+    </div>
+    -->
+    <div>
+      <form method="POST" action="/login" class="login">
+        <h2 class="header">Login to redcard</h2>
+        <input type="text" name="username" id="username-field" class="username" placeholder="Username">
+        <input type="password" name="password" id="password-field" class="password" placeholder="Password">
+        <input type="submit" value="Login" id="login-form-submit" class="submit">
+      </form>
+    </div>
+  </div>
+  
+  </main>
+</body>
+
+</html>
