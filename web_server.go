@@ -4,7 +4,7 @@ Web Server for the redcard web platform.
 
 @author  Peter Egan
 @since   2021-08-15
-@lastUpdated 2021-08-26
+@lastUpdated 2021-09-05
 
 Copyright (c) 2021 kiercam llc
 */
@@ -53,44 +53,18 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		http.Error(w, "404 not found.", http.StatusNotFound)
-	case "POST":
-		// Call ParseForm() to parse the raw query and update r.PostForm and r.Form.
-		if err := r.ParseForm(); err != nil {
-			fmt.Fprintf(w, "ParseAdminPost() err: %v", err)
-			return
-		}
-
-		// Grab the blog information from the POST
-		title := r.FormValue("blog_title")
-		post := r.FormValue("blog_body")
-
-		// Add the blog post to the blog.
-		bp := blog_post{title: title, content: post}
-		bp.post()
-
-		// TBD: Have the blog post return an error (possibly)
-
-		// After posting the blog, redirect the User to the blog.
-		http.Redirect(w, r, "blog.html", http.StatusSeeOther)
-
-		// Reply back to the web
-		fmt.Fprintf(w, "Post from website! r.PostFrom = %v\n", r.PostForm)
-		fmt.Fprintf(w, "Title = %s\n", title)
-		fmt.Fprintf(w, "Post = %s\n", post)
-	case "PUT": // Here temporarily to handle the Quill
+	case "POST": // Here temporarily to handle the Quill
 		// Ensure the correct content type has been sent to the server.
 		contentType := r.Header.Get("Content-Type")
 		if contentType != "application/json" {
 			// Put an error code here. Do nothing but notify the screen.
 			fmt.Println("Incorrect Content Type")
 		}
-		var bp blog_post2 // Declare the blog post.
+		var bp blog_post // Declare the blog post.
 		var unmarshalErr *json.UnmarshalTypeError
 		decoder := json.NewDecoder(r.Body)
 		decoder.DisallowUnknownFields()
 		err := decoder.Decode(&bp)
-		log.Println("decoding the body!")
-		log.Println(bp)
 		if err != nil {
 			fmt.Println("There was a decoding error!")
 			if errors.As(err, &unmarshalErr) {
@@ -102,12 +76,15 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Add the post to the blog.
-		bp.postQuill()
+		bp.post()
 
-		// Return a success back to the client.
-		// Modify this later.
-		errorResponse(w, "Success", http.StatusOK)
-		return
+		// After posting the blog, redirect the User to the blog.
+		// Note: This currently is not working - Issue #15.
+		// http.Redirect(w, r, "index.html", http.StatusSeeOther)
+		http.Redirect(w, r, "/blog", http.StatusFound)
+		// fmt.Fprintf(w, "Added a new blog post!")
+		// fmt.Fprintf(w, "Blog Title = %s\n", bp.Title)
+		// fmt.Fprintf(w, "Blog Content = %s\n", bp.Content)
 	default:
 		fmt.Fprintf(w, "Sorry, only POST method is supported.")
 	}
