@@ -57,7 +57,7 @@ func (b blog_post) post() {
 	newPost := fmt.Sprintf(newPostString, b.Title, currentTime.Format("2006-January-02"), content)
 
 	// d) Split the blog byte slice.
-	s := strings.SplitAfter(blogString, "<div class=\"row\">")
+	s := strings.SplitAfter(blogString, "<div class=\"blog\">")
 
 	// e) Recombine: slice1 + new post + slice2
 	newBlog := s[0] + "\n\t" + newPost + s[1]
