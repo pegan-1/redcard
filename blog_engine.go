@@ -4,7 +4,7 @@ Manages the blog for the redcard instance.
 
 @author  Peter Egan
 @since   2021-08-17
-@lastUpdated 2021-09-09
+@lastUpdated 2021-09-10
 
 Copyright (c) 2021 kiercam llc
 */
@@ -82,10 +82,20 @@ func processImages(blogContent string) string {
 		// Grab the original URL
 		origImageURL := image[0]
 
-		// Grab the image type and image
+		// Grab the image
 		imageSlice := strings.Split(origImageURL, ",")
-		imageType := ".png" // TODO. Need to determine image type.
-		image := strings.TrimSuffix(imageSlice[1], `">`)
+		image := strings.TrimSuffix(imageSlice[1], `">`) //image.
+
+		// And determine the image type
+		var imageType string
+		if strings.Contains(imageSlice[0], "png") {
+			imageType = ".png"
+		} else if (strings.Contains(imageSlice[0], "jpeg")) ||
+			(strings.Contains(imageSlice[0], "jpg")) {
+			imageType = ".jpeg"
+		} else {
+			panic("Can't process image type " + imageSlice[0])
+		}
 
 		// Generate the file name (using current time)
 		t := time.Now()
