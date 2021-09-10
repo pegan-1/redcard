@@ -1,9 +1,11 @@
 # recard executable
 redcard
 
-# static folder
-# static
+# blog file
+static/blog.html
+
+# blog images file
+static/images/blog
 
 # database
 rc.db
-
