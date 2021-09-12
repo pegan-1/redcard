@@ -3,7 +3,7 @@ admin.css
 Style sheet for the admin page.
 
 @author  Peter Egan
-@lastUpdated 2021-09-06
+@lastUpdated 2021-09-12
 
 Copyright (c) 2021 kiercam llc
 */
@@ -100,61 +100,3 @@ body {
    color: #aa0412;
    text-align: center;
  }
-
-/* #post{  
-    width: 600px;
-    height: 625px;
-    overflow: hidden;  
-    margin: auto; 
-    margin: 50px 0 0 450px;
-    padding: 5px;
-    background: #aa0412; 
-    border-radius: 15px ;  
-}
-
-#header{  
-    text-align: center;  
-    color: #000000;  
-}  
-
-#title{  
-    width: 500px;  
-    height: 30px;  
-    border: none;  
-    border-radius: 3px;  
-    padding-left: 8px;
-    margin: 0 auto;
-    display: block;
-    font-size: 14pt;
-    margin-bottom: 10px;
-} 
-
-#content{  
-    width: 500px;  
-    height: 450px;  
-    border: none;  
-    border-radius: 3px;  
-    padding-left: 8px;  
-    margin: 0 auto;
-    display: block;
-    font-size: 14pt;
-    margin-bottom: 10px;
-}  
-
-#submit {
-    background-color: #000000;
-    border: none;
-    color: white;
-    padding: 10px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-left: 245px;
-  }
-
-#submit:hover {
-   background-color: white;
-   color: black;
-}
- */

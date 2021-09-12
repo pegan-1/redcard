@@ -3,7 +3,7 @@ admin.js
 Scripting for the admin panel.
 
 @author  Peter Egan
-@lastUpdated 2021-09-06
+@lastUpdated 2021-09-12
 
 Copyright (c) 2021 kiercam llc
 */
@@ -47,9 +47,9 @@ let quill = new Quill('#editor', {
             //     } 
             // }
         },
-        imageResize: {
-            displaySize: true
-        },
+        // imageResize: {
+        //     displaySize: true
+        // },
     },
 });
 
