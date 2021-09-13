@@ -3,7 +3,7 @@ blog.css
 Style sheet for the blog.
 
 @author  Peter Egan
-@lastUpdated 2021-09-06
+@lastUpdated 2021-09-13
 
 Copyright (c) 2021 kiercam llc
 */
@@ -48,6 +48,118 @@ body {
 
 .post img{
    display: inline-block 
+}
+
+/* Quill formatting for a post */
+.ql-size-small {
+   font-size: 0.75em;
+}
+
+.ql-size-large {
+   font-size: 1.5em;
+}
+
+.ql-size-huge {
+   font-size: 2.5em;
+}
+
+pre.ql-syntax {
+   background-color: #23241f;
+   color: #f8f8f2;
+   overflow: visible;
+ }
+
+/* Indents */
+.ql-indent-1:not(.ql-direction-rtl) {
+   padding-left: 3em;
+}
+
+.ql-indent-1.ql-direction-rtl.ql-align-right {
+   padding-right: 3em;
+ }
+
+/* li.ql-indent-1:not(.ql-direction-rtl) {
+   padding-left: 4.5em;
+ }
+
+li.ql-indent-1.ql-direction-rtl.ql-align-right {
+   padding-right: 4.5em;
+}
+
+ol li.ql-indent-1 {
+   counter-increment: list-1;
+}
+
+ol li.ql-indent-1:before {
+   content: counter(list-1, lower-alpha) '. ';
+}
+ 
+ol li.ql-indent-1 {
+   counter-reset: list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
+} */
+
+.ql-indent-2:not(.ql-direction-rtl) {
+   padding-left: 6em;
+}
+
+.ql-indent-2.ql-direction-rtl.ql-align-right {
+   padding-right: 6em;
+ }
+
+/* li.ql-indent-2:not(.ql-direction-rtl) {
+   padding-left: 7.5em;
+ }
+
+li.ql-indent-2.ql-direction-rtl.ql-align-right {
+   padding-right: 7.5em;
+}
+
+ol li.ql-indent-2 {
+   counter-increment: list-2;
+}
+
+ol li.ql-indent-2:before {
+   content: counter(list-2, lower-roman) '. ';
+}
+
+ol li.ql-indent-2 {
+   counter-reset: list-3 list-4 list-5 list-6 list-7 list-8 list-9;
+} */
+
+.ql-indent-3:not(.ql-direction-rtl) {
+   padding-left: 9em;
+}
+
+.ql-indent-4:not(.ql-direction-rtl) {
+   padding-left: 12em;
+}
+
+.ql-indent-5:not(.ql-direction-rtl) {
+   padding-left: 15em;
+}
+
+.ql-indent-6:not(.ql-direction-rtl) {
+   padding-left: 18em;
+}
+
+.ql-indent-7:not(.ql-direction-rtl) {
+   padding-left: 21em;
+}
+
+.ql-indent-8:not(.ql-direction-rtl) {
+   padding-left: 24em;
+}
+
+.ql-align-right {
+   text-align: right;
+}
+
+.ql-align-center {
+   text-align: center;
+}
+
+.ql-align-justify {
+   text-align: justify;
 }
 
 /* Solid border */
