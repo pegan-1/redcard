@@ -3,7 +3,7 @@ admin.js
 Scripting for the admin panel.
 
 @author  Peter Egan
-@lastUpdated 2021-09-12
+@lastUpdated 2021-09-13
 
 Copyright (c) 2021 kiercam llc
 */
@@ -69,7 +69,18 @@ publishButton.addEventListener('click',async _ => {
         request.setRequestHeader("Accept", "application/json");
         request.setRequestHeader("Content-Type", "application/json");
         request.send(JSON.stringify(payload))
-        // window.location.href = "http://localhost.com/blog.html";
+
+        // Process the HTTP Reponse
+        request.onload = function(){
+            if (request.readyState === request.DONE) {
+                if (request.status === 200) {
+                    if(request.responseText === 'OK'){
+                        window.location.replace('/blog')
+                    }
+                }
+            }
+        }
+        //TODO - Better error handling.
     } catch(err) {
       // TBD... How do I manage errors?
       console.error(`Error: ${err}`);
