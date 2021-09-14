@@ -4,7 +4,7 @@ Web Server for the redcard web platform.
 
 @author  Peter Egan
 @since   2021-08-15
-@lastUpdated 2021-09-13
+@lastUpdated 2021-09-14
 
 Copyright (c) 2021 kiercam llc
 */
@@ -36,8 +36,8 @@ func (ws WebServer) listen() {
 
 	// Start up the Web Server
 	// fmt.Println("Starting Web Server on port 8080")
-	fmt.Println("Web Server running on port 8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	fmt.Println("Web Server running on port 80")
+	if err := http.ListenAndServe(":80", nil); err != nil {
 		log.Fatal(err)
 	}
 }
