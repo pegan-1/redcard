@@ -4,7 +4,7 @@ Web Server for the redcard web platform.
 
 @author  Peter Egan
 @since   2021-08-15
-@lastUpdated 2021-09-05
+@lastUpdated 2021-09-13
 
 Copyright (c) 2021 kiercam llc
 */
@@ -53,7 +53,7 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		http.Error(w, "404 not found.", http.StatusNotFound)
-	case "POST": // Here temporarily to handle the Quill
+	case "POST":
 		// Ensure the correct content type has been sent to the server.
 		contentType := r.Header.Get("Content-Type")
 		if contentType != "application/json" {
@@ -78,13 +78,10 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 		// Add the post to the blog.
 		bp.post()
 
-		// After posting the blog, redirect the User to the blog.
-		// Note: This currently is not working - Issue #15.
-		// http.Redirect(w, r, "index.html", http.StatusSeeOther)
-		http.Redirect(w, r, "/blog", http.StatusFound)
-		// fmt.Fprintf(w, "Added a new blog post!")
-		// fmt.Fprintf(w, "Blog Title = %s\n", bp.Title)
-		// fmt.Fprintf(w, "Blog Content = %s\n", bp.Content)
+		// The blog has posted, send the response back to the User.
+		fmt.Fprintf(w, `OK`)
+
+		//TODO: Better error handling.
 	default:
 		fmt.Fprintf(w, "Sorry, only POST method is supported.")
 	}
