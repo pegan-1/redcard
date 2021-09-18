@@ -84,13 +84,31 @@ func (b blog_post) postNew() {
 	//	- Just check for a duplicate when poster has submitted and add a number to the title. (MVP choice)
 	//  - Check in the blog post editor and notify the User if it is a duplicate.
 
-	// 2) Snapshot the blog post time
-	// blogPostTime := time.Now()
+	// 2) Pre-process the blog post.
+	content := processImages(b.Content)
 
-	// 3) Create the stand-alone blog post (START HERE NEXT!)
-	blogPostString := `<html><head><title>%s</title><link rel="stylesheet" type="text/css" href="css/blog.css"></head>
-		<body><div class="footer"><p class="footer_logo">powered by redcard</p></div></body></html>`
-	blogPost := fmt.Sprintf(blogPostString, b.Title)
+	// 3) Snapshot the blog post time
+	blogPostTime := time.Now()
+
+	// 4) Create the stand-alone blog post (START HERE NEXT!)
+	blogPostString := `<html>
+	<head>
+		<title>%s</title>
+			<link rel="stylesheet" type="text/css" href="css/blog.css">
+	</head>
+	<body>
+		<div class="post">
+			<h2>%s</h2>
+			<h5>%s</h5>
+			%s
+			<hr class="solid">
+		</div>
+		<div id="footer">
+			<p id="footer_logo">powered by redcard</p>
+		</div>
+	</body>
+</html>`
+	blogPost := fmt.Sprintf(blogPostString, b.Title, b.Title, blogPostTime.Format("2006-January-02"), content)
 
 	// 3) Save the blog post to its own html file
 	// a) Generate file name (convert the title to a file name)
