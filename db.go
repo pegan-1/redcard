@@ -4,7 +4,7 @@ Manages the redcard database.
 
 @author  Peter Egan
 @since   2021-08-22
-@lastUpdated 2021-08-23
+@lastUpdated 2021-09-15
 
 Copyright (c) 2021 kiercam llc
 */
@@ -71,5 +71,14 @@ func (DB) write(key string, value string) {
 	if errFile != nil {
 		fmt.Printf("err: %v\n", errFile)
 		return // Todo - better error handling.
+	}
+}
+
+// Print out the map keys
+// Used for testing purposes
+func (DB) printKeys() {
+	for k := range db.cache {
+		fmt.Println("Printing out database keys:")
+		fmt.Printf("[%s]", k)
 	}
 }

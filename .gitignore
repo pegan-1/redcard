@@ -1,8 +1,11 @@
 # recard executable
 redcard
 
-# blog file
+# blog summary file
 static/blog.html
+
+# blog directory
+/static/blog
 
 # blog images file
 static/images/blog
