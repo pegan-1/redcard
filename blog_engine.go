@@ -4,7 +4,7 @@ Manages the blog for the redcard instance.
 
 @author  Peter Egan
 @since   2021-08-17
-@lastUpdated 2021-09-18
+@lastUpdated 2021-09-19
 
 Copyright (c) 2021 kiercam llc
 */
@@ -77,7 +77,7 @@ func (b blog_post) post() {
 //   - Add the new post to the summary blog page.
 //   - (TBD) Add to the hompage.
 //   - (TBD) Archive current home page/blog summary page before posting blog.
-func (b blog_post) postNew() {
+func (b blog_post) postToBlog() {
 	db.printKeys()
 	// 1) Need to check for duplicate titles...
 	// Two possible design choices: (TBD)
@@ -85,6 +85,7 @@ func (b blog_post) postNew() {
 	//  - Check in the blog post editor and notify the User if it is a duplicate.
 
 	// 2) Pre-process the blog post.
+	// TODO - deal with images... Need to go to the correct location.
 	content := processImages(b.Content)
 
 	// 3) Snapshot the blog post time
@@ -94,7 +95,7 @@ func (b blog_post) postNew() {
 	blogPostString := `<html>
 	<head>
 		<title>%s</title>
-			<link rel="stylesheet" type="text/css" href="css/blog.css">
+			<link rel="stylesheet" type="text/css" href="../css/blog_post.css">
 	</head>
 	<body>
 		<div class="post">
@@ -116,7 +117,8 @@ func (b blog_post) postNew() {
 	fmt.Println("The blog file name is " + blogFileName)
 
 	// b) Create the blog file
-	blogFile, err := os.Create("static/blog/" + blogFileName + ".html")
+	url := "static/blog/" + blogFileName + ".html"
+	blogFile, err := os.Create(url)
 	if err != nil {
 		// TODO: Come up with better error handling.
 		fmt.Printf("Unable to create file: %v", err)
@@ -131,6 +133,7 @@ func (b blog_post) postNew() {
 	fmt.Printf("wrote %d bytes\n", n)
 
 	// 4) Add post to the Blog Summary page (TBD)
+	postToBlogSummary(b.Title, content, blogPostTime, url)
 
 	// 5) Add the post the homepage (TBD)
 
@@ -138,77 +141,71 @@ func (b blog_post) postNew() {
 	// START HERE NEXT!
 	// https://stackoverflow.com/questions/46748636/how-to-create-new-file-using-go-script
 
-	// Read in the blog summary page.
-	// blog_summary, err := ioutil.ReadFile("static/blog.html")
-	// if err != nil {
-	// 	fmt.Printf("err: %v\n", err)
-	// 	return // Todo - better error handling.
-	// }
-
-	// 	<html>
-	// 	<head>
-	// 	  <title>Blog</title>
-	// 	  <link rel="stylesheet" type="text/css" href="css/blog.css">
-	// 	</head>
-
-	// 	<body>
-	// 	  <div class="topnav">
-	// 		<a href="./index.html">Home</a>
-	// 		<a class="active">Blog</a>
-	// 	  </div>
-	// 	  <div class="header">
-	// 		<!-- <h2>Blog</h2> -->
-	// 	  </div>
-	// 	  <div class="blog">
-	// 	  <div class="post">
-	// 	  <h2>Trying to Test the Blog Again</h2>
-	// 	  <h5>2021-September-18</h5>
-	// 	  <p>Testing the blog name.</p>
-	// 	  <hr class="solid">
-	// 	  </div>
-	// 	  <div class="post">
-	// 	  <h2>Testing the Title to Filename</h2>
-	// 	  <h5>2021-September-18</h5>
-	// 	  <p>Here I am, testing the title to a filename.</p>
-	// 	  <hr class="solid">
-	// 	  </div>
-	// 	  <div class="post">
-	// 	  <h2>Here's another test</h2>
-	// 	  <h5>2021-September-16</h5>
-	// 	  <p>Yet another test!</p>
-	// 	  <hr class="solid">
-	// 	  </div>
-	// 	  <div class="post">
-	// 	  <h2>Testing the blog post</h2>
-	// 	  <h5>2021-September-16</h5>
-	// 	  <p>Will I see the keys?</p>
-	// 	  <hr class="solid">
-	// 	  </div>
-	// 	  <div class="post">
-	// 	  <h2>Do I fire the new post?</h2>
-	// 	  <h5>2021-September-16</h5>
-	// 	  <p>Checking if I fire the new post!</p>
-	// 	  <hr class="solid">
-	// 	  </div>
-	// 	  <div class="post">
-	// 	  <h2>Is the blog still working?</h2>
-	// 	  <h5>2021-September-15</h5>
-	// 	  <p>I believe it is still working.</p>
-	// 	  <hr class="solid">
-	// 	  </div>
-	// 	  <div class="post">
-	// 	  <h2>Blog Summary</h2>
-	// 	  <h5>2021-September-15</h5>
-	// 	  <p>Testing the blog summary page...</p>
-	// 	  <hr class="solid">
-	// 	  </div></div>
-	// 	  <div class="footer">
-	// 		<p class="footer_logo">powered by redcard</p>
-	// 	  </div>
-	// 	</body>
-	//   </html>
-
 }
+
+// Post the blog to the summary page
+func postToBlogSummary(title string, content string, postTime time.Time, url string) {
+	// Would like to post the following to the summary page...
+	// Picture
+	// Date
+	// Title
+	// Brief Content
+	// Read More
+
+	// TODO
+	// a) How to come up with a content summary.
+	// b) How to manage images.
+
+	// TODO  - Need to deal with images.
+	fmt.Println("Post to the Summary")
+	fmt.Println(title)
+	fmt.Println(content)
+	fmt.Println(url)
+
+	// 1) Read in the blog file...
+	blog, err := ioutil.ReadFile("static/blog.html")
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		return // Todo - better error handling.
+	}
+
+	// 2) Pre-process the blog post.
+	// TODO - Not sure what to do with images.
+	// content := processImages(b.Content)
+
+	// 3) Insert the blog summary in the file ...
+	// b) Covert the blog slice into a string
+	blogString := string(blog)
+
+	// c) Create the new HMTL for the blog post
+	newPostString := `<div class="post">
+	<h2>%s</h2>
+	<h5>%s</h5>
+	%s
+	<a href="%s">Read More...</a>
+	<hr class="solid">
+	</div>`
+	// newPost := fmt.Sprintf(newPostString, b.Title, currentTime.Format("2006-January-02"), b.Content)
+	newPost := fmt.Sprintf(newPostString, title, postTime.Format("2006-January-02"), content, url)
+
+	// d) Split the blog byte slice.
+	s := strings.SplitAfter(blogString, "<div class=\"blog\">")
+
+	// e) Recombine: slice1 + new post + slice2
+	newBlog := s[0] + "\n\t" + newPost + s[1]
+
+	// 3) Write out the new blog...
+	newBlogFile := []byte(newBlog)
+	errFile := ioutil.WriteFile("static/blog.html", newBlogFile, 0644)
+	if errFile != nil {
+		fmt.Printf("err: %v\n", errFile)
+		return // Todo - better error handling.
+	}
+}
+
+// func postBlogToHomepage() {
+
+// }
 
 // Given a new blog post, scan the post and process any images.
 func processImages(blogContent string) string {

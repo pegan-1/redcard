@@ -76,11 +76,11 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Add the post to the blog.
-		bp.post()
+		// bp.post()
 
 		// PLACEHOLDER for new blog posting.
 		// Once in place, will replace the bp.post() with this.
-		bp.postNew()
+		bp.postToBlog()
 
 		// The blog has posted, send the response back to the User.
 		fmt.Fprintf(w, `OK`)
