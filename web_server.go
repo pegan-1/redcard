@@ -31,7 +31,7 @@ func (ws WebServer) listen() {
 	// Set up the route handlers
 	http.HandleFunc("/admin", adminHandler)       // Handles the admin panel...
 	http.HandleFunc("/admin.html", admin2Handler) // Don't allow to be accessed directly.
-	http.HandleFunc("/blog", blogHandler)         // Handles the blog...
+	http.HandleFunc("/blog", blogHandler)         // Handles the blog summary...
 	http.HandleFunc("/login", loginHandler)       // Handles the login...
 
 	// Start up the Web Server
@@ -105,6 +105,10 @@ func admin2Handler(w http.ResponseWriter, r *http.Request) {
 
 // Handles the Blog
 func blogHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Received a request for /blog")
+	fmt.Println("Request URI " + r.RequestURI)
+	fmt.Println("Method: " + r.Method)
+
 	if r.URL.Path != "/blog" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return

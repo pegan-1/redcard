@@ -98,6 +98,10 @@ func (b blog_post) postToBlog() {
 			<link rel="stylesheet" type="text/css" href="../css/blog_post.css">
 	</head>
 	<body>
+		<div class="topnav">
+			<a href="../index.html">Home</a>
+			<a href="../blog">Blog</a>
+  		</div>
 		<div class="post">
 			<h2>%s</h2>
 			<h5>%s</h5>
@@ -117,8 +121,9 @@ func (b blog_post) postToBlog() {
 	fmt.Println("The blog file name is " + blogFileName)
 
 	// b) Create the blog file
-	url := "static/blog/" + blogFileName + ".html"
-	blogFile, err := os.Create(url)
+	url := "blog/" + blogFileName + ".html" // URL of new post
+	file := "static/" + url                 // File of new post
+	blogFile, err := os.Create(file)
 	if err != nil {
 		// TODO: Come up with better error handling.
 		fmt.Printf("Unable to create file: %v", err)
