@@ -5,7 +5,7 @@ redcard
 static/blog.html
 
 # blog directory
-/static/blog
+/static/posts
 
 # blog images file
 static/images/blog

@@ -75,12 +75,12 @@ func (b blog_post) post() {
 // Given a valid blog post -
 //	 - Create a file containing the new post.
 //   - Add the new post to the summary blog page.
-//   - (TBD) Add to the hompage.
-//   - (TBD) Archive current home page/blog summary page before posting blog.
+//   - (TODO) Add to the hompage.
+//   - (TODO) Archive current home page/blog summary page before posting blog.
 func (b blog_post) postToBlog() {
 	db.printKeys()
-	// 1) Need to check for duplicate titles...
-	// Two possible design choices: (TBD)
+	// Need to check for duplicate titles...
+	// Two possible design choices: (TODO)
 	//	- Just check for a duplicate when poster has submitted and add a number to the title. (MVP choice)
 	//  - Check in the blog post editor and notify the User if it is a duplicate.
 
@@ -124,12 +124,14 @@ func (b blog_post) postToBlog() {
 
 	// 3) Save the blog post to its own html file
 	// a) Generate file name (convert the title to a file name)
+	//    TODO - strip out all punctuation...
 	blogFileName := strings.ReplaceAll(strings.ToLower(b.Title), " ", "-")
 	fmt.Println("The blog file name is " + blogFileName)
 
 	// b) Create the blog file
-	url := "blog/" + blogFileName + ".html" // URL of new post
-	file := "static/" + url                 // File of new post
+	// url := "blog/" + blogFileName + ".html" // URL of new post
+	url := "posts/" + blogFileName + ".html" // URL of new post
+	file := "static/" + url                  // File of new post
 	blogFile, err := os.Create(file)
 	if err != nil {
 		// TODO: Come up with better error handling.
@@ -144,10 +146,10 @@ func (b blog_post) postToBlog() {
 	}
 	fmt.Printf("wrote %d bytes\n", n)
 
-	// 4) Add post to the Blog Summary page (TBD)
+	// 4) Add post to the Blog Summary page (TODO)
 	postToBlogSummary(b.Title, content, blogPostTime, url)
 
-	// 5) Add the post the homepage (TBD)
+	// 5) Add the post the homepage (TODO)
 
 	// Create the new blog post
 	// START HERE NEXT!
@@ -247,7 +249,8 @@ func processImages(blogContent string) string {
 
 		// Generate the file name (using current time)
 		t := time.Now()
-		fileLocation := "static/images/blog/"
+		// fileLocation := "static/images/blog/"
+		fileLocation := "static/posts/images/"
 		fileName := t.Format(time.RFC3339Nano) + imageType
 
 		// Save the image
@@ -270,7 +273,9 @@ func processImages(blogContent string) string {
 		}
 
 		// Determine new URL
-		newImageURL := "<img src=images/blog/" + fileName + ">"
+		// newImageURL := "<img src=images/blog/" + fileName + ">"
+		// newImageURL := "<img src=posts/images/" + fileName + ">"
+		newImageURL := "<img src=images/" + fileName + ">"
 
 		//Replace the original URL with the new URL
 		blogContent = strings.Replace(blogContent, origImageURL, newImageURL, -1)
