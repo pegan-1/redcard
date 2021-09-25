@@ -79,20 +79,19 @@ func (b blog_post) post() {
 //   - (TODO) Archive current home page/blog summary page before posting blog.
 func (b blog_post) postToBlog() {
 	db.printKeys()
-	// Need to check for duplicate titles...
+	// Need to check for duplicate titles... (NEXT UP)
 	// Two possible design choices: (TODO)
 	//	- Just check for a duplicate when poster has submitted and add a number to the title. (MVP choice)
 	//  - Check in the blog post editor and notify the User if it is a duplicate.
 
 	// 2) Pre-process the blog post.
-	// TODO - deal with images... Need to go to the correct location.
 	content := processImages(b.Content)
 
 	// 3) Snapshot the blog post time
 	blogPostTime := time.Now()
 	blogPostTimeString := "Posted on " + blogPostTime.Format("January 02, 2006")
 
-	// 4) Create the stand-alone blog post (START HERE NEXT!)
+	// 4) Create the stand-alone blog post
 	blogPostString := `<html>
 	<head>
 		<title>%s</title>
@@ -119,17 +118,15 @@ func (b blog_post) postToBlog() {
 		</div>
 	</body>
 </html>`
-	// blogPost := fmt.Sprintf(blogPostString, b.Title, b.Title, blogPostTime.Format("2006-January-02"), content)
+
 	blogPost := fmt.Sprintf(blogPostString, b.Title, b.Title, blogPostTimeString, content)
 
 	// 3) Save the blog post to its own html file
 	// a) Generate file name (convert the title to a file name)
-	//    TODO - strip out all punctuation...
-	blogFileName := strings.ReplaceAll(strings.ToLower(b.Title), " ", "-")
-	fmt.Println("The blog file name is " + blogFileName)
+	titleMinusPunct := stripPunctuation(b.Title) // Strip out any punctuation
+	blogFileName := strings.ReplaceAll(strings.ToLower(titleMinusPunct), " ", "-")
 
 	// b) Create the blog file
-	// url := "blog/" + blogFileName + ".html" // URL of new post
 	url := "posts/" + blogFileName + ".html" // URL of new post
 	file := "static/" + url                  // File of new post
 	blogFile, err := os.Create(file)
@@ -139,22 +136,16 @@ func (b blog_post) postToBlog() {
 	}
 
 	// c) Write the post to the file
-	n, err := blogFile.WriteString(blogPost)
-	if err != nil {
+	_, err2 := blogFile.WriteString(blogPost)
+	if err2 != nil {
 		// TODO: Come up with better error handling.
 		fmt.Printf("Unable to write to the file: %v", err)
 	}
-	fmt.Printf("wrote %d bytes\n", n)
 
 	// 4) Add post to the Blog Summary page (TODO)
 	postToBlogSummary(b.Title, content, blogPostTime, url)
 
 	// 5) Add the post the homepage (TODO)
-
-	// Create the new blog post
-	// START HERE NEXT!
-	// https://stackoverflow.com/questions/46748636/how-to-create-new-file-using-go-script
-
 }
 
 // Post the blog to the summary page

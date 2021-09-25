@@ -105,9 +105,9 @@ func admin2Handler(w http.ResponseWriter, r *http.Request) {
 
 // Handles the Blog
 func blogHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Received a request for /blog")
-	fmt.Println("Request URI " + r.RequestURI)
-	fmt.Println("Method: " + r.Method)
+	// fmt.Println("Received a request for /blog")
+	// fmt.Println("Request URI " + r.RequestURI)
+	// fmt.Println("Method: " + r.Method)
 
 	if r.URL.Path != "/blog" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
