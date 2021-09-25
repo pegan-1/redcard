@@ -1,9 +1,9 @@
 /*
-blog_post.css
+post.css
 Style sheet for an individual blog post.
 
 @author  Peter Egan
-@lastUpdated 2021-09-19
+@lastUpdated 2021-09-22
 
 Copyright (c) 2021 kiercam llc
 */
@@ -38,16 +38,35 @@ body {
 }
 
 /* Add an effect for each post */
-.post {
+#post {
     background-color: white;
+    margin-top: 50px;
     padding-top: 5px;
     padding-left: 300px;
     padding-right: 300px;
-    /* margin-top: 10px; */
   }
 
-.post img{
+#post img{
    display: inline-block 
+}
+
+#title {
+   font-size: 1.5em; 
+   font-weight: bolder; 
+   /* line-height: 36px;  */
+   /* margin: 0 0 24px;  */
+   text-align: left;
+}
+
+#date {
+   color: #9da5a4;
+   font-size: 1em;
+   /* font-weight: bolder; */
+   margin-top: 15px;
+}
+
+#content{
+   margin-top: 20px;
 }
 
 /* Quill formatting for a post */
@@ -163,12 +182,17 @@ ol li.ql-indent-2 {
 }
 
 /* Solid border */
-.solid {
+/* .solid {
     border-top: 1px;
     margin-left: 200px;
     margin-right: 200px;
+} */
+
+#blog-return {
+   margin-top: 30px;
 }
-.footer_logo {
+
+#footer_logo {
     color: #aa0412;
     text-align: center;
-  }
+}

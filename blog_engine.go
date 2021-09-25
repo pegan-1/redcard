@@ -4,7 +4,7 @@ Manages the blog for the redcard instance.
 
 @author  Peter Egan
 @since   2021-08-17
-@lastUpdated 2021-09-19
+@lastUpdated 2021-09-25
 
 Copyright (c) 2021 kiercam llc
 */
@@ -90,22 +90,28 @@ func (b blog_post) postToBlog() {
 
 	// 3) Snapshot the blog post time
 	blogPostTime := time.Now()
+	blogPostTimeString := "Posted on " + blogPostTime.Format("January 02, 2006")
 
 	// 4) Create the stand-alone blog post (START HERE NEXT!)
 	blogPostString := `<html>
 	<head>
 		<title>%s</title>
-			<link rel="stylesheet" type="text/css" href="../css/blog_post.css">
+			<link rel="stylesheet" type="text/css" href="../css/post.css">
 	</head>
 	<body>
 		<div class="topnav">
 			<a href="../index.html">Home</a>
 			<a href="../blog">Blog</a>
   		</div>
-		<div class="post">
-			<h2>%s</h2>
-			<h5>%s</h5>
-			%s
+		<div id="post">
+			<div id="title">%s</div>
+			<div id="date">%s</div>
+			<div id="content">
+				%s
+			</div>
+			<a href="../blog">
+				<div id="blog-return">Back To Blog</div>
+			</a>
 			<hr class="solid">
 		</div>
 		<div id="footer">
@@ -113,7 +119,8 @@ func (b blog_post) postToBlog() {
 		</div>
 	</body>
 </html>`
-	blogPost := fmt.Sprintf(blogPostString, b.Title, b.Title, blogPostTime.Format("2006-January-02"), content)
+	// blogPost := fmt.Sprintf(blogPostString, b.Title, b.Title, blogPostTime.Format("2006-January-02"), content)
+	blogPost := fmt.Sprintf(blogPostString, b.Title, b.Title, blogPostTimeString, content)
 
 	// 3) Save the blog post to its own html file
 	// a) Generate file name (convert the title to a file name)
