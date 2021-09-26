@@ -78,27 +78,21 @@ func (b blog_post) post() {
 //   - (TODO) Add to the hompage.
 //   - (TODO) Archive current home page/blog summary page before posting blog.
 func (b blog_post) postToBlog() {
-	db.printKeys()
-	// Need to check for duplicate titles... (NEXT UP)
-	// Two possible design choices: (TODO)
-	//	- Just check for a duplicate when poster has submitted and add a number to the title. (MVP choice)
-	//  - Check in the blog post editor and notify the User if it is a duplicate.
-
-	// 2) Pre-process the blog post.
+	// 1) Pre-process the blog post.
 	content := processImages(b.Content)
 
-	// 3) Snapshot the blog post time
+	// 2) Snapshot the blog post time
 	blogPostTime := time.Now()
 	blogPostTimeString := "Posted on " + blogPostTime.Format("January 02, 2006")
 
-	// 4) Create the stand-alone blog post
+	// 3) Create the stand-alone blog post
 	blogPostString := `<html>
 	<head>
 		<title>%s</title>
 			<link rel="stylesheet" type="text/css" href="../css/post.css">
 	</head>
 	<body>
-		<div class="topnav">
+		<div id="topnav">
 			<a href="../index.html">Home</a>
 			<a href="../blog">Blog</a>
   		</div>
@@ -111,7 +105,7 @@ func (b blog_post) postToBlog() {
 			<a href="../blog">
 				<div id="blog-return">Back To Blog</div>
 			</a>
-			<hr class="solid">
+			<hr id="solid">
 		</div>
 		<div id="footer">
 			<p id="footer_logo">powered by redcard</p>
@@ -121,10 +115,9 @@ func (b blog_post) postToBlog() {
 
 	blogPost := fmt.Sprintf(blogPostString, b.Title, b.Title, blogPostTimeString, content)
 
-	// 3) Save the blog post to its own html file
+	// 4) Save the blog post to its own html file
 	// a) Generate file name (convert the title to a file name)
-	titleMinusPunct := stripPunctuation(b.Title) // Strip out any punctuation
-	blogFileName := strings.ReplaceAll(strings.ToLower(titleMinusPunct), " ", "-")
+	blogFileName := generateFileName(b.Title)
 
 	// b) Create the blog file
 	url := "posts/" + blogFileName + ".html" // URL of new post
@@ -142,10 +135,15 @@ func (b blog_post) postToBlog() {
 		fmt.Printf("Unable to write to the file: %v", err)
 	}
 
-	// 4) Add post to the Blog Summary page (TODO)
+	// d) Post has been successfully created.
+	//    Add the filename to the database.
+	payload := "{blog: true}"
+	db.write(blogFileName, payload)
+
+	// 5) Add post to the Blog Summary page (TODO)
 	postToBlogSummary(b.Title, content, blogPostTime, url)
 
-	// 5) Add the post the homepage (TODO)
+	// 6) Add the post the homepage (TODO)
 }
 
 // Post the blog to the summary page

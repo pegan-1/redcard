@@ -74,11 +74,21 @@ func (DB) write(key string, value string) {
 	}
 }
 
+// Returns true if the key is in the database, false otherwise.
+func (DB) doesKeyExist(s string) bool {
+	fmt.Println("Checking if the key exists")
+	keyExists := false
+	if _, ok := db.cache[s]; ok {
+		keyExists = true
+	}
+	return keyExists
+}
+
 // Print out the map keys
 // Used for testing purposes
 func (DB) printKeys() {
+	fmt.Println("Printing out database keys:")
 	for k := range db.cache {
-		fmt.Println("Printing out database keys:")
 		fmt.Printf("[%s]", k)
 	}
 }
