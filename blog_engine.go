@@ -4,7 +4,7 @@ Manages the blog for the redcard instance.
 
 @author  Peter Egan
 @since   2021-08-17
-@lastUpdated 2021-09-25
+@lastUpdated 2021-10-10
 
 Copyright (c) 2021 kiercam llc
 */
@@ -23,6 +23,7 @@ import (
 
 type blog_post struct {
 	Title   string `json:"title"`
+	Summary string `json:"summary"`
 	Content string `json:"content"`
 }
 
@@ -141,13 +142,13 @@ func (b blog_post) postToBlog() {
 	db.write(blogFileName, payload)
 
 	// 5) Add post to the Blog Summary page (TODO)
-	postToBlogSummary(b.Title, content, blogPostTime, url)
+	postToBlogSummary(b.Title, b.Summary, content, blogPostTime, url)
 
 	// 6) Add the post the homepage (TODO)
 }
 
 // Post the blog to the summary page
-func postToBlogSummary(title string, content string, postTime time.Time, url string) {
+func postToBlogSummary(title string, summary string, content string, postTime time.Time, url string) {
 	// Would like to post the following to the summary page...
 	// Picture
 	// Date
@@ -162,6 +163,7 @@ func postToBlogSummary(title string, content string, postTime time.Time, url str
 	// TODO  - Need to deal with images.
 	fmt.Println("Post to the Summary")
 	fmt.Println(title)
+	fmt.Println(summary)
 	fmt.Println(content)
 	fmt.Println(url)
 

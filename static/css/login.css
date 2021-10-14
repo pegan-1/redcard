@@ -3,7 +3,7 @@ login.css
 Style sheet for the redcard login page.
 
 @author  Peter Egan
-@lastUpdated 2021-09-06
+@lastUpdated 2021-10-10
 
 Copyright (c) 2021 kiercam llc
 */
@@ -15,56 +15,56 @@ body
     /* font-family: 'Arial';   */
 }  
 
-.login{  
-    width: 382px;
-    overflow: hidden;  
+.login{ 
+    background: #aa0412; 
+    border-radius: 15px ;   
     margin: auto; 
     margin: 150px 0 0 500px;
+    overflow: hidden;  
     padding: 5px;
-    background: #aa0412; 
-    border-radius: 15px ;  
+    width: 382px;
 }
 
 .header{  
-    text-align: center;  
     color: #000000;  
+    text-align: center;  
     /* padding: 20px;   */
 }  
 
 .username{  
-    width: 300px;  
-    height: 30px;  
     border: none;  
     border-radius: 3px;  
-    padding-left: 8px;
-    margin: 0 auto;
     display: block;
     font-size: 14pt;
+    height: 30px;  
+    margin: 0 auto;
     margin-bottom: 10px;
+    padding-left: 8px;
+    width: 300px;  
 }  
 
-.password{  
-    width: 300px;  
-    height: 30px;  
+.password{
     border: none;  
     border-radius: 3px;  
-    padding-left: 8px;  
-    margin: 0 auto;
     display: block;
     font-size: 14pt;
+    height: 30px;  
+    margin: 0 auto;
     margin-bottom: 10px;
+    padding-left: 8px;  
+    width: 300px;  
 }  
 
 .submit {
     background-color: #000000;
     border: none;
     color: white;
-    padding: 10px 32px;
-    text-align: center;
-    text-decoration: none;
     display: inline-block;
     font-size: 16px;
     margin-left: 245px;
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none;
   }
 
 .submit:hover {

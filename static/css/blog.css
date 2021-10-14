@@ -3,28 +3,28 @@ blog.css
 Style sheet for the blog.
 
 @author  Peter Egan
-@lastUpdated 2021-09-13
+@lastUpdated 2021-10-10
 
 Copyright (c) 2021 kiercam llc
 */
 
 body {
-   margin: 0;
    font-family: Arial, Helvetica, sans-serif;
+   margin: 0;
 }
 
 .topnav {
-   overflow: hidden;
    background-color: #333;
+   overflow: hidden;
 }
   
 .topnav a {
-   float: left;
    color: #f2f2f2;
-   text-align: center;
-   padding: 14px 16px;
-   text-decoration: none;
+   float: left;
    font-size: 17px;
+   padding: 14px 16px;
+   text-align: center;
+   text-decoration: none;
 }
   
 .topnav a:hover {
@@ -40,9 +40,9 @@ body {
 /* Add an effect for each post */
 .post {
     background-color: white;
-    padding-top: 5px;
     padding-left: 300px;
     padding-right: 300px;
+    padding-top: 5px;
     /* margin-top: 10px; */
   }
 

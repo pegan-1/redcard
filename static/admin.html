@@ -23,8 +23,10 @@ Copyright (c) 2021 kiercam llc
     <a class="active">Admin</a>
   </div>
   <div id="blog_post">
-    <h2 id="blog_header">New Blog Post</h2>
-    <input type="text" id="blog_title" name="blog_title" value = "" placeholder="Blog Title">
+    <div id="blog_header">New Blog Post</div>
+    <input type="text" id="blog_title" name="blog_title" value = "" placeholder="Title">
+    <textarea id="blog_summary" name="blog_summary" value = "" placeholder="Summary" rows="2" wrap="hard" maxlength="200" ></textarea>
+    <!-- <input type="textarea" id="blog_summary" name="blog_summary" rows="2" cols="10" value = "" placeholder="Summary"> -->
     <div id="editor"></div>
     <button type="button" id="publish">Publish</button>
   </div>  
@@ -39,8 +41,8 @@ Copyright (c) 2021 kiercam llc
   <!-- redcard -->
   <script src="js/admin.js" type="text/javascript" charset="utf-8"></script>
 
+  <div id="footer">
+    <p id="footer_logo">powered by redcard</p>
+  </div>
 </body>
-<div id="footer">
-  <p id="footer_logo">powered by redcard</p>
-</div>
 </html>

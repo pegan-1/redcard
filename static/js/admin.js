@@ -3,14 +3,16 @@ admin.js
 Scripting for the admin panel.
 
 @author  Peter Egan
-@lastUpdated 2021-09-13
+@lastUpdated 2021-10-10
 
 Copyright (c) 2021 kiercam llc
 */
 
 // Document Elements
 const editor = document.getElementById('editor');
+const blogSummary = document.getElementById('blog_summary');
 const blogTitle = document.getElementById('blog_title');
+
 const publishButton = document.getElementById('publish');
 
 //add the toolbar options
@@ -61,7 +63,9 @@ publishButton.addEventListener('click',async _ => {
     // Send the blog post to the server
     try{
         // Construct the payload
-        let payload = {"title": blogTitle.value, "content":content};
+        console.log("The blog summary is ")
+        console.log(blogSummary.value)
+        let payload = {"title": blogTitle.value, "summary": blogSummary.value, "content":content};
  
         // Send the  HTTP Request
         let request = new XMLHttpRequest();

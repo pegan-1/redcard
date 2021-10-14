@@ -3,28 +3,28 @@ admin.css
 Style sheet for the admin page.
 
 @author  Peter Egan
-@lastUpdated 2021-09-12
+@lastUpdated 2021-10-10
 
 Copyright (c) 2021 kiercam llc
 */
 
 body {
-   margin: 0;
    font-family: Arial, Helvetica, sans-serif;
+   margin: 0;
 }
   
 #topnav {
-   overflow: hidden;
    background-color: #333;
+   overflow: hidden;
 }
   
 #topnav a {
-   float: left;
    color: #f2f2f2;
-   text-align: center;
-   padding: 14px 16px;
-   text-decoration: none;
+   float: left;
    font-size: 17px;
+   padding: 14px 16px;
+   text-align: center;
+   text-decoration: none;
 }
   
 #topnav a:hover {
@@ -37,58 +37,73 @@ body {
    color: white;
 }
 
-#blog_post{  
-   width: 700px;
-   height: 660px;
-   overflow: hidden;  
-   margin: auto; 
-   margin: 50px 0 0 350px;
-   padding: 5px;
+#blog_post{ 
    background: #dad1d1; 
    border-radius: 15px ;  
+   font-size: 1.5em; 
+   font-weight: bolder; 
+   height: 700px;
+   /* margin: auto;  */
+   margin: 15px 0 0 350px;
+   overflow: hidden;  
+   padding: 5px;
+   width: 700px;
 }
 
-#blog_header{  
+#blog_header{ 
+   color: #000000; 
+   padding: 5px;  
    text-align: center;  
-   color: #000000;  
-   /* padding: 20px;   */
 }  
 
 #blog_title{  
-   width: 675px;  
-   height: 30px;  
    border: none;  
-   border-radius: 3px;  
-   padding-left: 8px;
-   margin: 0 auto;
+   border-radius: 3px; 
    display: block;
-   font-size: 14pt;
+   font-size: 14pt; 
+   height: 30px;  
+   margin: 0 auto;
    margin-bottom: 10px;
+   padding-left: 8px;
+   width: 675px;  
 } 
 
-#editor{  
-   width: 700px;  
-   height: 450px;  
-   border: none;  
-   border-radius: 3px;  
-   padding-left: 8px;  
-   margin: 0 auto;
+#blog_summary  {
+   border: none;
+   border-radius: 3px; 
    display: block;
    font-size: 14pt;
+   height: 60px; 
+   margin: 0 auto;
    margin-bottom: 10px;
+   padding-left: 8px;
+   resize: none;
+   width: 675px;  
+} 
+
+#editor{
    background: white; 
+   border: none;  
+   border-radius: 3px;
+   display: block;
+   font-size: 14pt; 
+   height: 450px; 
+   margin: 0 auto;
+   margin-bottom: 5px; 
+   padding-left: 8px;  
+   width: 700px;  
 }  
 
 #publish {
    background-color: #000000;
    border: none;
    color: white;
-   padding: 10px 32px;
-   text-align: center;
-   text-decoration: none;
    display: inline-block;
    font-size: 16px;
    margin-left: 300px;
+   padding: 10px 32px;
+   text-align: center;
+   text-decoration: none;
  }
 
 #publish:hover {
