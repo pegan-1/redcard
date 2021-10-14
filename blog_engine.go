@@ -4,7 +4,7 @@ Manages the blog for the redcard instance.
 
 @author  Peter Egan
 @since   2021-08-17
-@lastUpdated 2021-10-10
+@lastUpdated 2021-10-14
 
 Copyright (c) 2021 kiercam llc
 */
@@ -27,52 +27,6 @@ type blog_post struct {
 	Content string `json:"content"`
 }
 
-// Create the new blog post.
-func (b blog_post) post() {
-	// Given a valid blog post, write the post to the blog file.
-	// 1) Read in the blog file...
-	blog, err := ioutil.ReadFile("static/blog.html")
-	if err != nil {
-		fmt.Printf("err: %v\n", err)
-		return // Todo - better error handling.
-	}
-
-	// 2) Pre-process the blog post.
-	content := processImages(b.Content)
-
-	// 3) Insert the blog post in the file ...
-	// a) Grab the datetime
-	currentTime := time.Now()
-
-	// b) Covert the blog slice into a string
-	blogString := string(blog)
-
-	// c) Create the new HMTL for the blog post
-	newPostString := `<div class="post">
-	<h2>%s</h2>
-	<h5>%s</h5>
-	%s
-	<hr class="solid">
-	</div>`
-	// newPost := fmt.Sprintf(newPostString, b.Title, currentTime.Format("2006-January-02"), b.Content)
-	newPost := fmt.Sprintf(newPostString, b.Title, currentTime.Format("2006-January-02"), content)
-
-	// d) Split the blog byte slice.
-	s := strings.SplitAfter(blogString, "<div class=\"blog\">")
-
-	// e) Recombine: slice1 + new post + slice2
-	newBlog := s[0] + "\n\t" + newPost + s[1]
-
-	// 3) Write out the new blog...
-	newBlogFile := []byte(newBlog)
-	errFile := ioutil.WriteFile("static/blog.html", newBlogFile, 0644)
-	if errFile != nil {
-		fmt.Printf("err: %v\n", errFile)
-		return // Todo - better error handling.
-	}
-}
-
-// Create the new blog post.
 // Given a valid blog post -
 //	 - Create a file containing the new post.
 //   - Add the new post to the summary blog page.
@@ -88,30 +42,30 @@ func (b blog_post) postToBlog() {
 
 	// 3) Create the stand-alone blog post
 	blogPostString := `<html>
-	<head>
-		<title>%s</title>
-			<link rel="stylesheet" type="text/css" href="../css/post.css">
-	</head>
-	<body>
-		<div id="topnav">
-			<a href="../index.html">Home</a>
-			<a href="../blog">Blog</a>
-  		</div>
-		<div id="post">
-			<div id="title">%s</div>
-			<div id="date">%s</div>
-			<div id="content">
-				%s
-			</div>
-			<a href="../blog">
-				<div id="blog-return">Back To Blog</div>
-			</a>
-			<hr id="solid">
-		</div>
-		<div id="footer">
-			<p id="footer_logo">powered by redcard</p>
-		</div>
-	</body>
+  <head>
+    <title>%s</title>
+    <link rel="stylesheet" type="text/css" href="../css/post.css">
+  </head>
+  <body>
+    <div id="topnav">
+      <a href="../index.html">Home</a>
+      <a href="../blog">Blog</a>
+    </div>
+    <div id="post">
+      <div id="title">%s</div>
+      <div id="date">%s</div>
+      <div id="content">
+        %s
+      </div>
+      <a href="../blog">
+        <div id="blog-return">Back To Blog</div>
+      </a>
+      <hr id="solid">
+    </div>
+    <div id="footer">
+      <p id="footer_logo">powered by redcard</p>
+    </div>
+  </body>
 </html>`
 
 	blogPost := fmt.Sprintf(blogPostString, b.Title, b.Title, blogPostTimeString, content)
@@ -141,7 +95,7 @@ func (b blog_post) postToBlog() {
 	payload := "{blog: true}"
 	db.write(blogFileName, payload)
 
-	// 5) Add post to the Blog Summary page (TODO)
+	// 5) Add post to the Blog Summary page
 	postToBlogSummary(b.Title, b.Summary, content, blogPostTime, url)
 
 	// 6) Add the post the homepage (TODO)
@@ -149,23 +103,7 @@ func (b blog_post) postToBlog() {
 
 // Post the blog to the summary page
 func postToBlogSummary(title string, summary string, content string, postTime time.Time, url string) {
-	// Would like to post the following to the summary page...
-	// Picture
-	// Date
-	// Title
-	// Brief Content
-	// Read More
-
-	// TODO
-	// a) How to come up with a content summary.
-	// b) How to manage images.
-
 	// TODO  - Need to deal with images.
-	fmt.Println("Post to the Summary")
-	fmt.Println(title)
-	fmt.Println(summary)
-	fmt.Println(content)
-	fmt.Println(url)
 
 	// 1) Read in the blog file...
 	blog, err := ioutil.ReadFile("static/blog.html")
@@ -183,18 +121,21 @@ func postToBlogSummary(title string, summary string, content string, postTime ti
 	blogString := string(blog)
 
 	// c) Create the new HMTL for the blog post
-	newPostString := `<div class="post">
-	<h2>%s</h2>
-	<h5>%s</h5>
-	%s
-	<a href="%s">Read More...</a>
-	<hr class="solid">
-	</div>`
-	// newPost := fmt.Sprintf(newPostString, b.Title, currentTime.Format("2006-January-02"), b.Content)
-	newPost := fmt.Sprintf(newPostString, title, postTime.Format("2006-January-02"), content, url)
+	newPostString := `    <div class="post-summary">
+        <div class="title">%s</div>
+        <div class="date">%s</div>
+        <div class="summary">
+          <p> %s </p>
+        </div>
+        <div class="post-link">
+          <a href="%s">Read More...</a>
+        </div>
+        <hr class="solid">
+      </div>`
+	newPost := fmt.Sprintf(newPostString, title, postTime.Format("January 02, 2006"), summary, url)
 
 	// d) Split the blog byte slice.
-	s := strings.SplitAfter(blogString, "<div class=\"blog\">")
+	s := strings.SplitAfter(blogString, "<div id=\"blog\">")
 
 	// e) Recombine: slice1 + new post + slice2
 	newBlog := s[0] + "\n\t" + newPost + s[1]

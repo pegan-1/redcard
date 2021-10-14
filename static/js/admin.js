@@ -3,7 +3,7 @@ admin.js
 Scripting for the admin panel.
 
 @author  Peter Egan
-@lastUpdated 2021-10-10
+@lastUpdated 2021-10-14
 
 Copyright (c) 2021 kiercam llc
 */
@@ -63,8 +63,6 @@ publishButton.addEventListener('click',async _ => {
     // Send the blog post to the server
     try{
         // Construct the payload
-        console.log("The blog summary is ")
-        console.log(blogSummary.value)
         let payload = {"title": blogTitle.value, "summary": blogSummary.value, "content":content};
  
         // Send the  HTTP Request

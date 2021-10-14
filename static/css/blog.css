@@ -3,7 +3,7 @@ blog.css
 Style sheet for the blog.
 
 @author  Peter Egan
-@lastUpdated 2021-10-10
+@lastUpdated 2021-10-14
 
 Copyright (c) 2021 kiercam llc
 */
@@ -38,17 +38,45 @@ body {
 }
 
 /* Add an effect for each post */
-.post {
+/* .post-summary {
     background-color: white;
     padding-left: 300px;
     padding-right: 300px;
     padding-top: 5px;
-    /* margin-top: 10px; */
-  }
+    margin-top: 10px;
+  } 
+*/
 
-.post img{
+.post-summary {
+  float: left;
+  width: 33.33%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+} 
+
+.post-summary img{
    display: inline-block 
 }
+
+.title {
+   font-size: 1.5em; 
+   font-weight: bolder; 
+   /* line-height: 36px;  */
+   /* margin: 0 0 24px;  */
+   text-align: left;
+}
+
+.date {
+   color: #9da5a4;
+   font-size: 1em;
+   /* font-weight: bolder; */
+   margin-top: 15px;
+}
+
+.summary{
+   margin-top: 20px;
+}
+
 
 /* Quill formatting for a post */
 .ql-size-small {
