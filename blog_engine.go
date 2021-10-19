@@ -4,7 +4,7 @@ Manages the blog for the redcard instance.
 
 @author  Peter Egan
 @since   2021-08-17
-@lastUpdated 2021-10-14
+@lastUpdated 2021-10-18
 
 Copyright (c) 2021 kiercam llc
 */
@@ -12,13 +12,20 @@ Copyright (c) 2021 kiercam llc
 package main
 
 import (
+	"bytes"
 	"encoding/base64"
 	"fmt"
+	"image"
 	"io/ioutil"
 	"os"
 	"regexp"
 	"strings"
 	"time"
+
+	"image/jpeg"
+	"image/png"
+
+	"github.com/nfnt/resize"
 )
 
 type blog_post struct {
@@ -157,16 +164,19 @@ func postToBlogSummary(title string, summary string, content string, postTime ti
 func processImages(blogContent string) string {
 	// Find images in the blog post and store each image in the slice.
 	imageRegex := regexp.MustCompile(`<img(.*?)>`)
-	images := imageRegex.FindAllStringSubmatch(blogContent, -1)
+	postImages := imageRegex.FindAllStringSubmatch(blogContent, -1)
+
+	// Default thumbnail URL (used by default if a blog post doesn't contain an image.)
+	// tnURL := "defaultURL" // TODO...
 
 	// Save each image and set the image URL
-	for _, image := range images {
+	for i, postImage := range postImages {
 		// Grab the original URL
-		origImageURL := image[0]
+		origImageURL := postImage[0]
 
 		// Grab the image
 		imageSlice := strings.Split(origImageURL, ",")
-		image := strings.TrimSuffix(imageSlice[1], `">`) //image.
+		base64Image := strings.TrimSuffix(imageSlice[1], `">`) //image.
 
 		// And determine the image type
 		var imageType string
@@ -186,7 +196,7 @@ func processImages(blogContent string) string {
 		fileName := t.Format(time.RFC3339Nano) + imageType
 
 		// Save the image
-		dec, err := base64.StdEncoding.DecodeString(image)
+		dec, err := base64.StdEncoding.DecodeString(base64Image)
 		if err != nil {
 			// TODO.. Figure out proper error logging...
 			panic(err)
@@ -211,7 +221,58 @@ func processImages(blogContent string) string {
 
 		//Replace the original URL with the new URL
 		blogContent = strings.Replace(blogContent, origImageURL, newImageURL, -1)
-	}
 
+		// Create the thumbnail, save to /static/images/blog location and return url.
+		if i == 0 { // Save the first image as a thumbnail.
+			// Generate the file location and file name...
+			tnLocation := "static/images/blog/"
+			tnName := "thumbnail_" + fileName
+
+			// Resize the first image in the blog to use as the thumnail
+			tnImagePre, _, err := image.Decode(bytes.NewReader(dec)) // Turn from [] byte to image
+			if err != nil {
+				fmt.Println("Was not able to resize the image!")
+				panic(err)
+			}
+			tnImagePost := resize.Thumbnail(200, 200, tnImagePre, resize.Lanczos3) // Create thumnail
+
+			// Convert the image to a []byte for saving to file system.
+			tnBuf := new(bytes.Buffer)
+
+			// Encode the buffer in the correct image format.
+			if imageType == ".png" {
+				fmt.Println("Formatting thumbnail in .png")
+				err = png.Encode(tnBuf, tnImagePost)
+				if err != nil {
+					panic(err)
+				}
+			} else if imageType == ".jpeg" {
+				fmt.Println("Formatting thumbnail in .jpeg")
+				err = jpeg.Encode(tnBuf, tnImagePost, nil)
+				if err != nil {
+					panic(err)
+				}
+			} else {
+				panic("Can't process thumbnail of image type " + imageType)
+			}
+
+			// Save the thumbnail to the file system...
+			f, err := os.Create(tnLocation + tnName)
+			if err != nil {
+				panic(err)
+			}
+			defer f.Close()
+
+			//TODO - How to save the image file properly....
+			if _, err := f.Write(tnBuf.Bytes()); err != nil {
+				panic(err)
+			}
+			if err := f.Sync(); err != nil {
+				panic(err)
+			}
+			// TODO... Review and determine if the above library dependency can be removed.
+			// https://stackoverflow.com/questions/22940724/go-resizing-images
+		}
+	}
 	return (blogContent)
 }
